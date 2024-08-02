@@ -19,7 +19,7 @@ app.notFound(() => {
   throw HTTP404;
 });
 
-app.get('/', (c) => c.json({ ok: true }))
+app.get('/', (c) => c.text('Contact Bryan (contact.lme-schedule-server@singee.me) for help'))
 
 app.get('/ics', async (c) => {
   const url = new URL(c.req.url)
