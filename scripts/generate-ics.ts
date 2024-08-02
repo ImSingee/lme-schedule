@@ -5,6 +5,8 @@ type CEventIn = {
     title: string,
     start: string,
     end: string,
+    type: string,
+    coach: string,
     description?: string,
     location?: string,
     url?: string,
@@ -30,13 +32,14 @@ type CEventOut = {
 }
 
 
-async function generateICS(jsonData: string): Promise<string> {
+async function generateICS(jsonData: string, filter: string): Promise<string> {
     const eventsIn: CEventIn[] = JSON.parse(jsonData);
-    const events: CEventOut[] = eventsIn.map(e => ({
+    const events: CEventOut[] = applyFilter(eventsIn, filter).map(e => ({
         ...pick(e, ['title', 'description', 'location', 'url', 'status', 'busyStatus', 'categories', 'uid']),
         start: getDT(e.start),
         end: getDT(e.end),
     }))
+
 
     return new Promise((resolve, reject) => {
         createEvents(events, (error: Error | undefined, value: string) => {
@@ -47,6 +50,28 @@ async function generateICS(jsonData: string): Promise<string> {
             }
         });
     });
+}
+
+function applyFilter(events: CEventIn[], filter_: string): CEventIn[] {
+    if (!filter_) return events;
+
+    const filter = new URLSearchParams(filter_);
+
+    function getSlice(key: string) {
+        return filter.getAll(key).reduce((acc, val) => acc.concat(...val.split(' ')), [] as string[]).filter(v => !!v)
+    }
+
+    const filterType = getSlice('type');
+    if (filterType.length > 0) {
+        events = events.filter(e => filterType.includes(e.type));
+    }
+
+    const filterCoach = getSlice('coach');
+    if (filterCoach.length > 0) {
+        events = events.filter(e => filterCoach.includes(e.coach));
+    }
+
+    return events;
 }
 
 function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
@@ -75,7 +100,10 @@ async function readJsonInput(filename: string): Promise<string> {
 }
 
 async function main() {
-    const args = parse(Deno.args);
+    const args = parse(Deno.args, {
+        string: ['filter'],
+        default: { filter: '' },
+    });
 
     if (args._.length === 0) {
         console.error("Error: Please provide a filename or '-' for stdin");
@@ -86,7 +114,7 @@ async function main() {
 
     try {
         const jsonData = await readJsonInput(filename);
-        const icsString = await generateICS(jsonData);
+        const icsString = await generateICS(jsonData, args.filter);
         console.log(icsString);
     } catch (error) {
         console.error('Error:', error.message);

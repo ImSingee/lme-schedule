@@ -63,3 +63,11 @@ type CEvent = {
 ```
 deno run -A scripts/generate-ics.ts events/2024-08.json > ics/2024-08.json
 ```
+
+filter:
+
+generate-ics 脚本支持 `--filter xxx` 进行筛选，使用 URL Query String 的语法
+
+支持（多个筛选条件为与关系）：
+- type: 根据课程类型进行筛选，支持选定多种课程，例如 `type=ddm` `type=ddm+pirf` `type=ddm&type=pirf` 
+- coach: 根据课程导师进行筛选，支持选定多个导师，例如 `coach=shane` `coach=shane+lan` `coach=shane&coach=lan`
