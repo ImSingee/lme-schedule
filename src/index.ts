@@ -2,6 +2,9 @@ import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception';
 import { errorToResponse, HTTP404 } from './error';
 
+import { generateICS } from './ics';
+import events202408 from "../events/2024-08.json";
+
 
 const app = new Hono()
 
@@ -17,5 +20,12 @@ app.notFound(() => {
 });
 
 app.get('/', (c) => c.json({ ok: true }))
+
+app.get('/ics', async (c) => {
+  const url = new URL(c.req.url)
+  const icsString = await generateICS(events202408 as any, url.search);
+
+  return c.text(icsString)
+})
 
 export default app
