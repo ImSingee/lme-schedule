@@ -21,6 +21,10 @@ type CEvent = {
     type: ClassType,
     coach: string,
     start: Date,
+    startUtc: {
+        day: number,
+        hour: number,
+    },
     end: Date,
     description?: string,
     location?: string,
@@ -62,11 +66,17 @@ class Generator {
 
                 const [hour, minute] = this.parseTime(classItem.time);
 
+                const start = this.date(day, hour, minute)
+
                 events.push({
                     title: `${schedule.title} Live Class @ ${classItem.coach}`,
                     type,
                     coach: getCoach(classItem.coach),
-                    start: this.date(day, hour, minute),
+                    start,
+                    startUtc: {
+                        day: start.getUTCDay(),
+                        hour: start.getUTCHours(),
+                    },
                     end: this.date(day, hour, minute + 30),
                     status: 'CONFIRMED',
                     busyStatus: 'BUSY',

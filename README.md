@@ -43,6 +43,10 @@ type CEvent = {
     type: ClassType, // 课程类型
     coach: string, // Coach 名称，小写代号，Coach Shane 为 shane
     start: Date, // 开始时间
+    startUtc: {
+        day: number, // 一周中的星期几（0-6）
+        hour: number,
+    },
     end: Date, // 结束时间（目前固定为开始时间 + 30min）
     description?: string,
     location?: string,
@@ -61,7 +65,7 @@ type CEvent = {
 生成命令：
 
 ```
-deno run -A scripts/generate-ics.ts events/2024-08.json > ics/2024-08.json
+deno run -A scripts/generate-ics.ts events/2024-08.json > ics/2024-08.ics
 ```
 
 filter:
@@ -71,3 +75,8 @@ generate-ics 脚本支持 `--filter xxx` 进行筛选，使用 URL Query String 
 支持（多个筛选条件为与关系）：
 - type: 根据课程类型进行筛选，支持选定多种课程，例如 `type=ddm` `type=ddm+pirf` `type=ddm&type=pirf` 
 - coach: 根据课程导师进行筛选，支持选定多个导师，例如 `coach=shane` `coach=shane+lan` `coach=shane&coach=lan`
+- t: 根据课程开始的时间（UTC时间）进行筛选，语法为 `t=condition1,condition2,condition3`（可以任选一个或多个 condition，每个 condition 都需要满足），可重复此参数以选定多个条件组
+    - wd: 匹配开始的星期几，例如 `wd=0`（星期日） `wd=6+0`（星期六与星期日） `wd=1-5`（星期一至星期五）
+    - h: 匹配开始的小时，例如 `h=3` (3:00-3:59) `h=15-16` (15:00-16:59) `h=3+15-16` (3:00-3:59 & 15:00-16:59)
+
+自用：DDM 课程 + 所有 Coach + （北京时间）工作日 19:00-1:30、周末 7:00-1:30 `type=ddm&t=wd=1-5,h=11-17&t=wd=6+0,h=0-17+23`

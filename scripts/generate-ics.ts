@@ -4,6 +4,10 @@ import { createEvents } from "npm:ics@3.7.6";
 type CEventIn = {
     title: string,
     start: string,
+    startUtc: {
+        day: number,
+        hour: number,
+    },
     end: string,
     type: string,
     coach: string,
@@ -71,7 +75,68 @@ function applyFilter(events: CEventIn[], filter_: string): CEventIn[] {
         events = events.filter(e => filterCoach.includes(e.coach));
     }
 
+    const filterTime = filter.getAll('t').filter(v => !!v).map(v => new TimeFilter(v)).filter(f => f.valid);
+    if (filterTime.length > 0) {
+        events = events.filter(e => filterTime.some(f => f.test(e)));
+    }
+
     return events;
+}
+
+class TimeFilter {
+    private wd: Set<number> | null;
+    private h: Set<number> | null;
+
+    readonly valid: boolean
+
+    constructor(filter: string) {
+        // wd=6+0,h=0-17+23
+        const f: Record<string, string> = filter.split(',').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            if (value) {
+                acc[key] = value;
+            }
+            return acc
+        }, {})
+
+        this.wd = f.wd ? TimeFilter.parseNumberRange(f.wd, 0, 6) : null;
+        this.h = f.h ? TimeFilter.parseNumberRange(f.h, 0, 23) : null;
+
+
+        this.valid = !!this.wd || !!this.h
+    }
+
+    test(event: CEventIn): boolean {
+        if (this.wd && !this.wd.has(event.startUtc.day)) {
+            return false
+        }
+
+        if (this.h && !this.h.has(event.startUtc.hour)) {
+            return false
+        }
+
+        return true
+    }
+
+    private static parseNumberRange(range: string, min: number, max: number) {
+        // 0-17+21-22+23
+        return range.split('+').reduce((set, val) => {
+            const [start, end] = val.split('-').map(v => parseInt(v));
+            if (end !== undefined) {
+                if (start >= min && end <= max) {
+                    for (let i = start; i <= end; i++) {
+                        set.add(i)
+                    }
+                }
+            } else {
+                if (start >= min && start <= max) {
+                    set.add(start);
+                }
+            }
+
+            return set
+        }, new Set<number>())
+    }
 }
 
 function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
