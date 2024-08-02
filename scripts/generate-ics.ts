@@ -1,13 +1,18 @@
 import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
 import { createEvents } from "npm:ics@3.7.6";
+import _ from "npm:date-fns@2.30.0";
+import { getTimezoneOffset } from "npm:date-fns-tz@2.0.0";
+
+
+type TimeInfo = {
+    day: number,
+    hour: number,
+}
 
 type CEventIn = {
     title: string,
     start: string,
-    startUtc: {
-        day: number,
-        hour: number,
-    },
+    startUtc: TimeInfo,
     end: string,
     type: string,
     coach: string,
@@ -18,6 +23,10 @@ type CEventIn = {
     busyStatus?: 'FREE' | 'BUSY',
     categories?: string[],
     uid?: string,
+}
+
+type CEventInWithStartLocal = CEventIn & {
+    startLocal: TimeInfo,
 }
 
 type DT = [number, number, number, number, number]
@@ -77,7 +86,10 @@ function applyFilter(events: CEventIn[], filter_: string): CEventIn[] {
 
     const filterTime = filter.getAll('t').filter(v => !!v).map(v => new TimeFilter(v)).filter(f => f.valid);
     if (filterTime.length > 0) {
-        events = events.filter(e => filterTime.some(f => f.test(e)));
+        const tz = filter.get('tz')
+        const offset = tz ? getTimezoneOffset(tz) / 1000 / 60 / 60 : 0;
+
+        events = events.map(e => fillStartLocal(e, offset)).filter(e => filterTime.some(f => f.test(e)));
     }
 
     return events;
@@ -106,12 +118,12 @@ class TimeFilter {
         this.valid = !!this.wd || !!this.h
     }
 
-    test(event: CEventIn): boolean {
-        if (this.wd && !this.wd.has(event.startUtc.day)) {
+    test(event: CEventInWithStartLocal): boolean {
+        if (this.wd && !this.wd.has(event.startLocal.day)) {
             return false
         }
 
-        if (this.h && !this.h.has(event.startUtc.hour)) {
+        if (this.h && !this.h.has(event.startLocal.hour)) {
             return false
         }
 
@@ -120,7 +132,7 @@ class TimeFilter {
 
     private static parseNumberRange(range: string, min: number, max: number) {
         // 0-17+21-22+23
-        return range.split('+').reduce((set, val) => {
+        return range.split(' ').reduce((set, val) => {
             const [start, end] = val.split('-').map(v => parseInt(v));
             if (end !== undefined) {
                 if (start >= min && end <= max) {
@@ -137,6 +149,34 @@ class TimeFilter {
             return set
         }, new Set<number>())
     }
+}
+
+function fillStartLocal(e: CEventIn, offset: number): CEventInWithStartLocal {
+    const ee: CEventInWithStartLocal = e as CEventInWithStartLocal;
+
+    if (offset === 0) {
+        ee.startLocal = ee.startUtc
+    } else {
+        ee.startLocal = adjustTime(ee.startUtc, offset)
+    }
+
+    return ee
+}
+
+function adjustTime(startUtc: TimeInfo, offsetHours: number): TimeInfo {
+    let totalHours = startUtc.day * 24 + startUtc.hour + offsetHours;
+
+    while (totalHours < 0) {
+        totalHours += 7 * 24;
+    }
+
+    let newDay = Math.floor(totalHours / 24) % 7;
+    let newHour = totalHours % 24;
+
+    return {
+        day: newDay,
+        hour: newHour
+    };
 }
 
 function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {

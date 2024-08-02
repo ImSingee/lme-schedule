@@ -75,8 +75,8 @@ generate-ics 脚本支持 `--filter xxx` 进行筛选，使用 URL Query String 
 支持（多个筛选条件为与关系）：
 - type: 根据课程类型进行筛选，支持选定多种课程，例如 `type=ddm` `type=ddm+pirf` `type=ddm&type=pirf` 
 - coach: 根据课程导师进行筛选，支持选定多个导师，例如 `coach=shane` `coach=shane+lan` `coach=shane&coach=lan`
-- t: 根据课程开始的时间（UTC时间）进行筛选，语法为 `t=condition1,condition2,condition3`（可以任选一个或多个 condition，每个 condition 都需要满足），可重复此参数以选定多个条件组
+- t: 根据课程开始的时间（可利用 `tz` 指定时区，默认 UTC 时间）进行筛选，语法为 `tz=xxx&t=condition1,condition2,condition3`（可以任选一个或多个 condition，每个 condition 都需要满足），可重复此参数以选定多个条件组
     - wd: 匹配开始的星期几，例如 `wd=0`（星期日） `wd=6+0`（星期六与星期日） `wd=1-5`（星期一至星期五）
     - h: 匹配开始的小时，例如 `h=3` (3:00-3:59) `h=15-16` (15:00-16:59) `h=3+15-16` (3:00-3:59 & 15:00-16:59)
 
-自用：DDM 课程 + 所有 Coach + （北京时间）工作日 19:00-1:30、周末 7:00-1:30 `type=ddm&t=wd=1-5,h=11-17&t=wd=6+0,h=0-17+23`
+自用：DDM 课程 + 所有 Coach + （北京时间）工作日 19:00-1:30、周末 7:00-1:30 `type=ddm&tz=Asia/Shanghai&t=wd=1-5,h=19-23+0-1&t=wd=6+0,h=7-23+0-1`
