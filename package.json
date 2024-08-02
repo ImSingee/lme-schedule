@@ -1,0 +1,15 @@
+{
+  "name": "lme-schedule-server",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.5.3",
+    "http-status-codes": "^2.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240725.0",
+    "wrangler": "^3.68.0"
+  }
+}
