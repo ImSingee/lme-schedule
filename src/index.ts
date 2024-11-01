@@ -5,10 +5,9 @@ import {errorToResponse, HTTP404} from './error';
 import indexHtml from './index.html'
 
 import {generateICS} from './ics';
-import events202408 from "../events/2024-08.json";
-import events202409 from "../events/2024-09.json";
-import events202410 from "../events/2024-10.json";
-import events202411 from "../events/2024-11.json";
+import { getEvents } from './events';
+import { applyFilter } from './filter';
+
 
 
 const app = new Hono()
@@ -26,9 +25,16 @@ app.notFound(() => {
 
 app.get('/', (c) => c.html(indexHtml))
 
+function getFilteredEvents(url: string) {
+    const filter = new URL(url).search
+
+    return applyFilter(getEvents(), filter)
+}
+
+app.get('/events', (c) => c.json(getFilteredEvents(c.req.url)))
+
 app.get('/ics', async (c) => {
-    const url = new URL(c.req.url)
-    const icsString = await generateICS([...events202408 as any, ...events202409 as any, ...events202410 as any, ...events202411 as any], url.search);
+    const icsString = await generateICS(getFilteredEvents(c.req.url));
 
     return c.text(icsString)
 })
