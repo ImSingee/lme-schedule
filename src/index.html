@@ -129,19 +129,19 @@
             }
             
             /* 添加模块颜色样式 */
-            .event.DDM {
+            .event.ddm {
                 background: #e3f2fd;
             }
-            .event.PIRF {
+            .event.pirf {
                 background: #f3e5f5;
             }
-            .event.Elite {
+            .event.elite {
                 background: #fff3e0;
             }
-            .event.Action {
+            .event.action {
                 background: #e8f5e9;
             }
-            .event.AMA {
+            .event.ama {
                 background: #fce4ec;
             }
             
@@ -206,30 +206,22 @@
                 border-radius: 4px;
             }
             
-            .calendar-title.DDM {
+            .calendar-title.ddm {
                 background: #e3f2fd;
             }
-            .calendar-title.PIRF {
+            .calendar-title.pirf {
                 background: #f3e5f5;
             }
-            .calendar-title.Elite {
+            .calendar-title.elite {
                 background: #fff3e0;
             }
-            .calendar-title.Action {
+            .calendar-title.action {
                 background: #e8f5e9;
             }
-            .calendar-title.AMA {
+            .calendar-title.ama {
                 background: #fce4ec;
             }
             
-            .separated-view .calendar {
-                display: none;
-            }
-            
-            .separated-view .calendar.visible {
-                display: grid;
-            }
-
             .separate-calendar-parent {
                 margin-top: 20px;
             }
@@ -260,27 +252,27 @@
             <label>选择要显示的课程:</label>
             <div id="courseCheckboxes">
                 <label>
-                    <input type="checkbox" value="DDM" checked>
+                    <input type="checkbox" value="ddm" checked>
                     <span>DDM</span>
                     <div class="legend-color" style="background: #e3f2fd;"></div>
                 </label>
                 <label>
-                    <input type="checkbox" value="PIRF" checked>
+                    <input type="checkbox" value="pirf" checked>
                     <span>PIRF</span>
                     <div class="legend-color" style="background: #f3e5f5;"></div>
                 </label>
                 <label>
-                    <input type="checkbox" value="Elite" checked>
+                    <input type="checkbox" value="elite" checked>
                     <span>Elite Sessions</span>
                     <div class="legend-color" style="background: #fff3e0;"></div>
                 </label>
                 <label>
-                    <input type="checkbox" value="Action" checked>
+                    <input type="checkbox" value="action" checked>
                     <span>Action English</span>
                     <div class="legend-color" style="background: #e8f5e9;"></div>
                 </label>
                 <label>
-                    <input type="checkbox" value="AMA" checked>
+                    <input type="checkbox" value="ama" checked>
                     <span>AMA</span>
                     <div class="legend-color" style="background: #fce4ec;"></div>
                 </label>
@@ -362,6 +354,17 @@
                 }));
             }
 
+            function getCourseName(courseType) {
+                const typeMapping = {
+                    'ddm': 'DDM',
+                    'pirf': 'PIRF',
+                    'elite': 'Elite Sessions',
+                    'action': 'Action English',
+                    'ama': 'AMA'
+                };
+                return typeMapping[courseType] || courseType.toUpperCase();
+            }
+
             async function loadEvents() {
                 const apiUrl = document.getElementById('apiUrl').value;
                 const timezone = document.getElementById('timezone').value;
@@ -387,7 +390,7 @@
                         createCalendar('calendar', events, selectedCourses, timezone);
                     } else {
                         // 为每个课程类型创建单独的日历
-                        const courseTypes = ['DDM', 'PIRF', 'Elite', 'Action', 'AMA'];
+                        const courseTypes = ['ddm', 'pirf', 'elite', 'action', 'ama'];
                         courseTypes.forEach(courseType => {
                             if (selectedCourses.includes(courseType)) {
                                 const calendarId = `calendar-${courseType}`;
@@ -395,14 +398,13 @@
                                 calendarContainer.id = `calendar-${courseType}-parent`;
                                 calendarContainer.className = 'separate-calendar-parent';
                                 calendarContainer.innerHTML = `
-                                    <div class="calendar-title ${courseType}">${courseType} 课程表</div>
+                                    <div class="calendar-title ${courseType}">${getCourseName(courseType)} 课程表</div>
                                 `;
                                 calendarsContainer.appendChild(calendarContainer);
                                 
                                 // 过滤该课程类型的事件
                                 const filteredEvents = events.filter(event => {
-                                    const eventType = getEventType(event);
-                                    return eventType === courseType;
+                                    return event.type === courseType;
                                 });
                                 
                                 createCalendar(calendarId, filteredEvents, [courseType], timezone, calendarContainer);
@@ -415,28 +417,6 @@
                 } finally {
                     loading.style.display = 'none';
                 }
-            }
-            
-            // 确保 getEventType 函数正确识别事件类型
-            function getEventType(event) {
-                if (event.type) {
-                    const typeMapping = {
-                        'ddm': 'DDM',
-                        'pirf': 'PIRF',
-                        'elite': 'Elite',
-                        'action': 'Action',
-                        'ama': 'AMA'
-                    };
-                    return typeMapping[event.type.toLowerCase()] || event.type.toUpperCase();
-                }
-                
-                const moduleTypes = ['DDM', 'PIRF', 'Elite', 'Action', 'AMA'];
-                for (const type of moduleTypes) {
-                    if (event.title.includes(type)) {
-                        return type;
-                    }
-                }
-                return null;
             }
             
             // 添加视图模式切换的事件监听
@@ -494,33 +474,12 @@
                     dayEvents.forEach(event => {
                         const eventDiv = document.createElement('div');
                         eventDiv.className = 'event';
-                        let eventType;
                         
-                        // 修改事件类型判断逻辑
-                        if (event.type) {
-                            // 根据类型映射到正确的显示名称
-                            const typeMapping = {
-                                'ddm': 'DDM',
-                                'pirf': 'PIRF',
-                                'elite': 'Elite',
-                                'action': 'Action',
-                                'ama': 'AMA'
-                            };
-                            eventType = typeMapping[event.type] || event.type.toUpperCase();
-                            eventDiv.classList.add(eventType);
-                        } else {
-                            // 保留原有的标题判断逻辑作为后备
-                            const moduleTypes = ['DDM', 'PIRF', 'Elite', 'Action', 'AMA'];
-                            moduleTypes.forEach(type => {
-                                if (event.title.includes(type)) {
-                                    eventType = type;
-                                    eventDiv.classList.add(type);
-                                }
-                            });
-                        }
+                        // 直接使用 event.type
+                        eventDiv.classList.add(event.type);
                         
                         // 如果事件类型不在选中的课程中，添加隐藏类
-                        if (!selectedCourses.includes(eventType)) {
+                        if (!selectedCourses.includes(event.type)) {
                             eventDiv.classList.add('hidden-course');
                         }
                         
@@ -538,16 +497,14 @@
                         }
                         
                         eventDiv.textContent = displayText;
-
                         eventDiv.title = `${time} ${event.title}`;
-
                         dayDiv.appendChild(eventDiv);
                     });
                     
                     calendar.appendChild(dayDiv);
                 }
                 
-                // 修��课程选择器的事件监听
+                // 修课程选择器的事件监听
                 document.querySelectorAll('#courseCheckboxes input').forEach(checkbox => {
                     checkbox.addEventListener('change', () => {
                         const courseType = checkbox.value;
