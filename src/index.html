@@ -318,7 +318,7 @@
             
             // Set default value and display calendar on page load
             document.addEventListener('DOMContentLoaded', () => {
-                const defaultUrl = window.location.origin + '/events';
+                const defaultUrl = window.location.origin + '/events' + location.search;
                 document.getElementById('apiUrl').value = defaultUrl;
                 updateMonthDisplay();
                 loadEvents();
