@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <title>Events JSON 预览</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            
+            .input-group {
+                margin: 20px 0;
+            }
+            
+            textarea {
+                width: 100%;
+                height: 200px;
+                padding: 8px;
+                margin-bottom: 10px;
+                font-family: monospace;
+            }
+            
+            button {
+                padding: 8px 16px;
+                background: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            
+            .calendar {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 10px;
+                margin-top: 20px;
+            }
+            
+            .calendar-header {
+                font-weight: bold;
+                text-align: center;
+                padding: 10px;
+                background: #f5f5f5;
+            }
+            
+            .calendar-day {
+                min-height: 100px;
+                padding: 10px;
+                border: 1px solid #ddd;
+            }
+            
+            .event {
+                margin: 5px 0;
+                padding: 5px;
+                border-radius: 3px;
+                font-size: 0.9em;
+            }
+
+            .event.ddm { background: #e3f2fd; }
+            .event.pirf { background: #f3e5f5; }
+            .event.elite { background: #fff3e0; }
+            .event.action { background: #e8f5e9; }
+            .event.ama { background: #fce4ec; }
+            
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 20px 0;
+            }
+            
+            .month-selector {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .month-selector button {
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            
+            .month-selector span {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            
+            .timezone-selector {
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+            }
+
+            .legend {
+                display: flex;
+                gap: 10px;
+                margin: 10px 0;
+                flex-wrap: wrap;
+            }
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .legend-color {
+                width: 20px;
+                height: 20px;
+                border-radius: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Events JSON 预览</h1>
+        
+        <div class="input-group">
+            <textarea id="jsonInput" placeholder="粘贴 events/*.json 内容"></textarea>
+            <button onclick="parseAndRender()">预览</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e3f2fd;"></div>
+                <span>DDM</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f3e5f5;"></div>
+                <span>PIRF</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fff3e0;"></div>
+                <span>Elite</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e8f5e9;"></div>
+                <span>Action</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fce4ec;"></div>
+                <span>AMA</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="month-selector">
+                <button onclick="changeMonth(-1)">上个月</button>
+                <span id="currentMonth"></span>
+                <button onclick="changeMonth(1)">下个月</button>
+            </div>
+            
+            <select id="timezone" class="timezone-selector" onchange="renderCalendar()">
+                <option value="local">本地时间</option>
+                <option value="UTC">UTC 时间</option>
+                <option value="America/Los_Angeles">洛杉矶时间 (GMT-7)</option>
+            </select>
+        </div>
+        
+        <div id="calendar-container">
+            <h2>DDM</h2>
+            <div id="calendar-ddm" class="calendar">
+                <div class="calendar-header">周一</div>
+                <div class="calendar-header">周二</div>
+                <div class="calendar-header">周三</div>
+                <div class="calendar-header">周四</div>
+                <div class="calendar-header">周五</div>
+                <div class="calendar-header">周六</div>
+                <div class="calendar-header">周日</div>
+            </div>
+
+            <h2>PIRF</h2>
+            <div id="calendar-pirf" class="calendar">
+                <div class="calendar-header">周一</div>
+                <div class="calendar-header">周二</div>
+                <div class="calendar-header">周三</div>
+                <div class="calendar-header">周四</div>
+                <div class="calendar-header">周五</div>
+                <div class="calendar-header">周六</div>
+                <div class="calendar-header">周日</div>
+            </div>
+
+            <h2>Elite Sessions</h2>
+            <div id="calendar-elite" class="calendar">
+                <div class="calendar-header">周一</div>
+                <div class="calendar-header">周二</div>
+                <div class="calendar-header">周三</div>
+                <div class="calendar-header">周四</div>
+                <div class="calendar-header">周五</div>
+                <div class="calendar-header">周六</div>
+                <div class="calendar-header">周日</div>
+            </div>
+
+            <h2>Action English</h2>
+            <div id="calendar-action" class="calendar">
+                <div class="calendar-header">周一</div>
+                <div class="calendar-header">周二</div>
+                <div class="calendar-header">周三</div>
+                <div class="calendar-header">周四</div>
+                <div class="calendar-header">周五</div>
+                <div class="calendar-header">周六</div>
+                <div class="calendar-header">周日</div>
+            </div>
+
+            <h2>AMA</h2>
+            <div id="calendar-ama" class="calendar">
+                <div class="calendar-header">周一</div>
+                <div class="calendar-header">周二</div>
+                <div class="calendar-header">周三</div>
+                <div class="calendar-header">周四</div>
+                <div class="calendar-header">周五</div>
+                <div class="calendar-header">周六</div>
+                <div class="calendar-header">周日</div>
+            </div>
+        </div>
+
+        <script>
+            let currentDate = new Date();
+            let events = [];
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                updateMonthDisplay();
+            });
+
+            function parseAndRender() {
+                const jsonInput = document.getElementById('jsonInput').value;
+                try {
+                    events = JSON.parse(jsonInput);
+                    renderCalendar();
+                } catch (error) {
+                    console.error('解析 JSON 失败:', error);
+                    alert('解析 JSON 失败，请检查格式是否正确');
+                }
+            }
+
+            function updateMonthDisplay() {
+                const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月',
+                                  '七月', '八月', '九月', '十月', '十一月', '十二月'];
+                const monthYear = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+                document.getElementById('currentMonth').textContent = monthYear;
+            }
+
+            function changeMonth(delta) {
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + delta, 1);
+                updateMonthDisplay();
+                renderCalendar();
+            }
+
+            function convertToTimezone(date, timezone) {
+                if (timezone === 'local') {
+                    return date;
+                }
+                
+                if (timezone === 'UTC') {
+                    return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+                }
+                
+                return new Date(date.toLocaleString('en-US', {
+                    timeZone: timezone
+                }));
+            }
+
+            function renderCalendar() {
+                const timezone = document.getElementById('timezone').value;
+                const types = ['ddm', 'pirf', 'elite', 'action', 'ama'];
+                
+                types.forEach(type => {
+                    const calendar = document.getElementById(`calendar-${type}`);
+                    const typeEvents = events.filter(event => event.type === type);
+                    
+                    // 清除旧的日历日期
+                    const headers = calendar.querySelectorAll('.calendar-header');
+                    calendar.innerHTML = '';
+                    headers.forEach(header => calendar.appendChild(header));
+                    
+                    // 获取当前选择月份的第一天和最后一天
+                    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                    
+                    // 填充日历
+                    let firstDayOfWeek = firstDay.getDay() || 7; // 将周日的0改为7
+                    firstDayOfWeek = firstDayOfWeek - 1; // 调整为周一开始
+                    const daysInMonth = lastDay.getDate();
+                    
+                    // 添加空白天数
+                    for (let i = 0; i < firstDayOfWeek; i++) {
+                        const emptyDay = document.createElement('div');
+                        emptyDay.className = 'calendar-day';
+                        calendar.appendChild(emptyDay);
+                    }
+                    
+                    // 添加月份天数
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const dayDiv = document.createElement('div');
+                        dayDiv.className = 'calendar-day';
+                        dayDiv.innerHTML = `<div>${day}</div>`;
+                        
+                        // 查找当天的事件
+                        const dayEvents = typeEvents.filter(event => {
+                            const eventDate = convertToTimezone(new Date(event.start), timezone);
+                            return eventDate.getDate() === day && 
+                                   eventDate.getMonth() === currentDate.getMonth() &&
+                                   eventDate.getFullYear() === currentDate.getFullYear();
+                        });
+                        
+                        // 添加事件到日历格子
+                        dayEvents.forEach(event => {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.className = `event ${event.type}`;
+                            const eventDate = convertToTimezone(new Date(event.start), timezone);
+
+                            if (event.start === '2024-11-10T09:00:00.000Z') {
+                                console.log(event)
+                            }
+
+                            const hours = eventDate.getHours().toString().padStart(2, '0');
+                            const minutes = eventDate.getMinutes().toString().padStart(2, '0');
+                            const time = `${hours}:${minutes}`;
+
+                            const coach = `Coach ${event.coach.charAt(0).toUpperCase() + event.coach.slice(1)}`;
+                            
+                            eventDiv.textContent = `${time} ${coach}`;
+                            dayDiv.appendChild(eventDiv);
+                        });
+                        
+                        calendar.appendChild(dayDiv);
+                    }
+
+                    // 如果这个类型没有任何事件，隐藏整个日历
+                    const calendarContainer = calendar.parentElement;
+                    const titleElement = calendarContainer.previousElementSibling;
+                    if (typeEvents.length === 0) {
+                        calendar.style.display = 'none';
+                        titleElement.style.display = 'none';
+                    } else {
+                        calendar.style.display = 'grid';
+                        titleElement.style.display = 'block';
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

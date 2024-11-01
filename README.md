@@ -58,6 +58,8 @@ type CEvent = {
 }
 ```
 
+预览 JSON：events/preview.html
+
 ## ics
 
 存储在 ics 目录下
