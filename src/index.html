@@ -138,6 +138,25 @@
                 height: 20px;
                 border-radius: 3px;
             }
+            
+            .course-selector {
+                margin: 20px 0;
+            }
+            
+            .course-selector label {
+                margin-right: 15px;
+            }
+            
+            #courseCheckboxes {
+                margin-top: 10px;
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .hidden-course {
+                display: none !important;
+            }
         </style>
     </head>
     <body>
@@ -146,6 +165,17 @@
         <div class="input-group">
             <input type="url" id="apiUrl" placeholder="输入 API 地址">
             <button onclick="loadEvents()">加载课程</button>
+        </div>
+
+        <div class="course-selector">
+            <label>选择要显示的课程:</label>
+            <div id="courseCheckboxes">
+                <label><input type="checkbox" value="DDM" checked> DDM</label>
+                <label><input type="checkbox" value="PIRF" checked> PIRF</label>
+                <label><input type="checkbox" value="Elite" checked> Elite Sessions</label>
+                <label><input type="checkbox" value="Action" checked> Action English</label>
+                <label><input type="checkbox" value="AMA" checked> AMA</label>
+            </div>
         </div>
 
         <div class="controls">
@@ -173,11 +203,11 @@
             </div>
             <div class="legend-item">
                 <div class="legend-color" style="background: #fff3e0;"></div>
-                <span>Elite</span>
+                <span>Elite Sessions</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color" style="background: #e8f5e9;"></div>
-                <span>Action</span>
+                <span>Action English</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color" style="background: #fce4ec;"></div>
@@ -243,6 +273,10 @@
                 const timezone = document.getElementById('timezone').value;
                 const loading = document.getElementById('loading');
                 const calendar = document.getElementById('calendar');
+                
+                // 获取选中的课程
+                const selectedCourses = Array.from(document.querySelectorAll('#courseCheckboxes input:checked'))
+                    .map(checkbox => checkbox.value);
 
                 loading.style.display = 'block';
 
@@ -289,26 +323,66 @@
                         dayEvents.forEach(event => {
                             const eventDiv = document.createElement('div');
                             eventDiv.className = 'event';
+                            let eventType;
                             
-                            // 根据事件标题添加对应的模块类名
-                            const moduleTypes = ['DDM', 'PIRF', 'Elite', 'Action', 'AMA'];
-                            moduleTypes.forEach(type => {
-                                if (event.title.includes(type)) {
-                                    eventDiv.classList.add(type);
-                                }
-                            });
+                            // 修改事件类型判断逻辑
+                            if (event.type) {
+                                // 根据类型映射到正确的显示名称
+                                const typeMapping = {
+                                    'ddm': 'DDM',
+                                    'pirf': 'PIRF',
+                                    'elite': 'Elite',
+                                    'action': 'Action',
+                                    'ama': 'AMA'
+                                };
+                                eventType = typeMapping[event.type] || event.type.toUpperCase();
+                                eventDiv.classList.add(eventType);
+                            } else {
+                                // 保留原有的标题判断逻辑作为后备
+                                const moduleTypes = ['DDM', 'PIRF', 'Elite', 'Action', 'AMA'];
+                                moduleTypes.forEach(type => {
+                                    if (event.title.includes(type)) {
+                                        eventType = type;
+                                        eventDiv.classList.add(type);
+                                    }
+                                });
+                            }
+                            
+                            // 如果事件类型不在选中的课程中，添加隐藏类
+                            if (!selectedCourses.includes(eventType)) {
+                                eventDiv.classList.add('hidden-course');
+                            }
                             
                             const eventDate = convertToTimezone(new Date(event.start), timezone);
                             const hours = eventDate.getHours().toString().padStart(2, '0');
                             const minutes = eventDate.getMinutes().toString().padStart(2, '0');
                             const time = `${hours}:${minutes}`;
                             
-                            eventDiv.textContent = `${time} ${event.title}`;
+                            // 添加教练信息（如果存在）
+                            let displayText = `${time} `;
+                            if (event.coach) {
+                                displayText += `Coach ${event.coach.charAt(0).toUpperCase() + event.coach.slice(1)}`;
+                            } else {
+                                displayText += event.title;
+                            }
+                            
+                            eventDiv.textContent = displayText;
                             dayDiv.appendChild(eventDiv);
                         });
                         
                         calendar.appendChild(dayDiv);
                     }
+                    
+                    // 添加课程选择器的事件监听
+                    document.querySelectorAll('#courseCheckboxes input').forEach(checkbox => {
+                        checkbox.addEventListener('change', () => {
+                            const courseType = checkbox.value;
+                            const events = document.querySelectorAll(`.event.${courseType}`);
+                            events.forEach(event => {
+                                event.classList.toggle('hidden-course', !checkbox.checked);
+                            });
+                        });
+                    });
                     
                 } catch (error) {
                     console.error('加载事件失败:', error);
