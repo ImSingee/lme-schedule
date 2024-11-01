@@ -14,12 +14,15 @@
             
             .input-group {
                 margin: 20px 0;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                width: 100%;
             }
             
             input[type="url"] {
-                width: 80%;
+                flex: 1;
                 padding: 8px;
-                margin-right: 10px;
             }
             
             button {
@@ -64,9 +67,31 @@
             }
             
             .loading {
-                text-align: center;
-                margin: 20px 0;
                 display: none;
+                position: relative;
+                width: 20px;
+                height: 20px;
+                margin-left: 10px;
+            }
+            
+            .loading:after {
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: 2px solid #4CAF50;
+                border-color: #4CAF50 transparent #4CAF50 transparent;
+                animation: loading 1.2s linear infinite;
+            }
+            
+            @keyframes loading {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
             }
             
             .controls {
@@ -74,6 +99,7 @@
                 justify-content: space-between;
                 align-items: center;
                 margin: 20px 0;
+                margin-bottom: 0;
             }
             
             .month-selector {
@@ -177,8 +203,23 @@
                 font-weight: bold;
                 margin-bottom: 10px;
                 padding: 10px;
-                background: #f5f5f5;
                 border-radius: 4px;
+            }
+            
+            .calendar-title.DDM {
+                background: #e3f2fd;
+            }
+            .calendar-title.PIRF {
+                background: #f3e5f5;
+            }
+            .calendar-title.Elite {
+                background: #fff3e0;
+            }
+            .calendar-title.Action {
+                background: #e8f5e9;
+            }
+            .calendar-title.AMA {
+                background: #fce4ec;
             }
             
             .separated-view .calendar {
@@ -188,31 +229,31 @@
             .separated-view .calendar.visible {
                 display: grid;
             }
+
+            .separate-calendar-parent {
+                margin-top: 20px;
+            }
+            
+            /* 添加标题容器样式 */
+            .title-container {
+                display: flex;
+                align-items: center;
+            }
+
+            .title-container h1 {
+                margin: 0;
+            }
         </style>
     </head>
     <body>
-        <h1>LME 课程表</h1>
+        <div class="title-container">
+            <h1>LME 课程表</h1>
+            <div id="loading" class="loading"></div>
+        </div>
         
         <div class="input-group">
             <input type="url" id="apiUrl" placeholder="输入 API 地址">
             <button onclick="loadEvents()">加载课程</button>
-        </div>
-
-        <div id="loading" class="loading">
-            加载中...
-        </div>
-
-        <div class="controls">
-            <div class="month-selector">
-                <button onclick="changeMonth(-1)">上个月</button>
-                <span id="currentMonth"></span>
-                <button onclick="changeMonth(1)">下个月</button>
-            </div>
-            <select id="timezone" class="timezone-selector" onchange="loadEvents()">
-                <option value="local">本地时间</option>
-                <option value="UTC">UTC</option>
-                <option value="America/Los_Angeles">洛杉矶时间</option>
-            </select>
         </div>
 
         <div class="course-selector">
@@ -253,6 +294,19 @@
             <label>
                 <input type="radio" name="viewMode" value="separated"> 分离视图
             </label>
+        </div>
+
+        <div class="controls">
+            <div class="month-selector">
+                <button onclick="changeMonth(-1)">上个月</button>
+                <span id="currentMonth"></span>
+                <button onclick="changeMonth(1)">下个月</button>
+            </div>
+            <select id="timezone" class="timezone-selector" onchange="loadEvents()">
+                <option value="local">本地时间</option>
+                <option value="UTC">UTC</option>
+                <option value="America/Los_Angeles">洛杉矶时间</option>
+            </select>
         </div>
 
         <div id="calendarsContainer">
@@ -339,8 +393,9 @@
                                 const calendarId = `calendar-${courseType}`;
                                 const calendarContainer = document.createElement('div');
                                 calendarContainer.id = `calendar-${courseType}-parent`;
+                                calendarContainer.className = 'separate-calendar-parent';
                                 calendarContainer.innerHTML = `
-                                    <div class="calendar-title">${courseType} 课程表</div>
+                                    <div class="calendar-title ${courseType}">${courseType} 课程表</div>
                                 `;
                                 calendarsContainer.appendChild(calendarContainer);
                                 
@@ -483,13 +538,16 @@
                         }
                         
                         eventDiv.textContent = displayText;
+
+                        eventDiv.title = `${time} ${event.title}`;
+
                         dayDiv.appendChild(eventDiv);
                     });
                     
                     calendar.appendChild(dayDiv);
                 }
                 
-                // 修改课程选择器的事件监听
+                // 修��课程选择器的事件监听
                 document.querySelectorAll('#courseCheckboxes input').forEach(checkbox => {
                     checkbox.addEventListener('change', () => {
                         const courseType = checkbox.value;
