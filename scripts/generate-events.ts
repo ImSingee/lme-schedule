@@ -1,5 +1,6 @@
 import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
-import { getDay, getDaysInMonth } from "npm:date-fns@2.30.0";
+import { getDay, getDaysInMonth } from "npm:date-fns@4.1.0";
+import { fromZonedTime } from 'npm:date-fns-tz@3.2.0';
 
 interface Class {
     coach: string;
@@ -41,7 +42,6 @@ class Generator {
 
     private daysInMonth: number;
     private firstWeekday: number; // [1, 7] for Monday to Sunday
-    private timezoneOffset: number; // in hours
 
     constructor(year: number, month: number) {
         this.year = year;
@@ -49,7 +49,6 @@ class Generator {
 
         this.daysInMonth = getDaysInMonth(new Date(year, month - 1));
         this.firstWeekday = getDay(new Date(year, month - 1, 1)) || 7;
-        this.timezoneOffset = -7 + (new Date().getTimezoneOffset()) / 60;
     }
 
     generateEventsForClasses(schedule: Schedule) {
@@ -98,7 +97,16 @@ class Generator {
     }
 
     private date(day: number, hour: number, min: number): Date {
-        return new Date(this.year, this.month - 1, day, hour - this.timezoneOffset, min);
+        const laDate = new Date(
+            this.year,
+            this.month - 1, 
+            day,
+            hour,
+            min
+        );
+
+        return fromZonedTime(laDate, 'America/Los_Angeles') 
+
     }
 
     private parseTime(str: string) {
