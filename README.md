@@ -21,7 +21,7 @@ interface Class {
 
 利用 AI 生成：https://monica.im/home/chat/Monica/monica?convId=conv%3Aad200624-71d4-4718-b255-e6384c8c8cd5
 
-预览 JSON：https://monica.im/share/artifact?id=BTgrVcL3Eq6FmJjEVzM3Q5
+预览 JSON：https://monica.im/share/artifact?id=BTgrVcL3Eq6FmJjEVzM3Q5 （data/preview.html）
 
 ## event json
 
