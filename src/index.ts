@@ -2,6 +2,8 @@ import {Hono} from 'hono'
 import {HTTPException} from 'hono/http-exception';
 import {errorToResponse, HTTP404} from './error';
 
+import indexHtml from './index.html'
+
 import {generateICS} from './ics';
 import events202408 from "../events/2024-08.json";
 import events202409 from "../events/2024-09.json";
@@ -22,7 +24,7 @@ app.notFound(() => {
     throw HTTP404;
 });
 
-app.get('/', (c) => c.text('Contact Bryan (contact.lme-schedule-server@singee.me) for help'))
+app.get('/', (c) => c.html(indexHtml))
 
 app.get('/ics', async (c) => {
     const url = new URL(c.req.url)
