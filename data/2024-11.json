@@ -1,312 +1,317 @@
 [
-    {
-      "title": "DDM",
-      "noDays": [1, 2, 3, 4, 5],
-      "classes": [
-        {
-          "coach": "Coach Francis",
-          "day": 7,
-          "time": "0200"
-        },
-        {
-          "coach": "Coach Lan",
-          "day": 7,
-          "time": "0230"
-        },
-        {
-          "coach": "Coach Matt",
-          "day": 7,
-          "time": "0330"
-        },
-        {
-          "coach": "Coach Milos",
-          "day": 7,
-          "time": "1200"
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 7,
-          "time": "1700"
-        },
-        {
-          "coach": "Coach Lan",
-          "day": 1,
-          "time": "0230"
-        },
-        {
-          "coach": "Coach Gulya",
-          "day": 1,
-          "time": "0245",
-          "only": [11, 25]
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 1,
-          "time": "0500"
-        },
-        {
-          "coach": "Coach Miguel",
-          "day": 1,
-          "time": "0700"
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 1,
-          "time": "1700"
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 2,
-          "time": "0300"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 2,
-          "time": "0400"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 3,
-          "time": "0400"
-        },
-        {
-          "coach": "Coach Matt",
-          "day": 3,
-          "time": "0600"
-        },
-        {
-          "coach": "Coach Francis",
-          "day": 3,
-          "time": "1500"
-        },
-        {
-          "coach": "Coach Milos",
-          "day": 4,
-          "time": "1200"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 5,
-          "time": "0400"
-        },
-        {
-          "coach": "Coach Miguel",
-          "day": 5,
-          "time": "0800"
-        },
-        {
-          "coach": "Coach Francis",
-          "day": 6,
-          "time": "0230"
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 6,
-          "time": "1000"
-        },
-        {
-          "coach": "Coach Matt",
-          "day": 6,
-          "time": "1030"
-        }
-      ]
-    },
-    {
-      "title": "PIRF",
-      "noDays": [1, 2, 3, 4, 5],
-      "classes": [
-        {
-          "coach": "Coach Francis",
-          "day": 7,
-          "time": "0500"
-        },
-        {
-          "coach": "Coach Matt",
-          "day": 7,
-          "time": "0900"
-        },
-        {
-          "coach": "Coach Lan",
-          "day": 7,
-          "time": "1900"
-        },
-        {
-          "coach": "Coach Gulya",
-          "day": 1,
-          "time": "0200",
-          "only": [11, 25]
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 1,
-          "time": "0400"
-        },
-        {
-          "coach": "Coach Francis",
-          "day": 1,
-          "time": "0600"
-        },
-        {
-          "coach": "Coach Paul",
-          "day": 2,
-          "time": "0200"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 2,
-          "time": "0400"
-        },
-        {
-          "coach": "Coach Matt",
-          "day": 2,
-          "time": "0600"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 3,
-          "time": "1600"
-        },
-        {
-          "coach": "Coach Paul",
-          "day": 4,
-          "time": "0200"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 4,
-          "time": "0600"
-        },
-        {
-          "coach": "Coach Miguel",
-          "day": 4,
-          "time": "0700"
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 5,
-          "time": "0300"
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 5,
-          "time": "0500"
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 5,
-          "time": "1200"
-        },
-        {
-          "coach": "Coach Lan",
-          "day": 6,
-          "time": "0230"
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 6,
-          "time": "0800"
-        }
-      ]
-    },
-    {
-      "title": "Elite Sessions",
-      "classes": [
-        {
-          "coach": "Coach Gulya",
-          "day": 2,
-          "time": "0500",
-          "only": [5, 12]
-        },
-        {
-          "coach": "Coach Shane",
-          "day": 5,
-          "time": "0930",
-          "only": [8, 22]
-        },
-        {
-          "coach": "Coach Shane",
-          "day": 5,
-          "time": "1700",
-          "only": [8, 22]
-        }
-      ]
-    },
-    {
-      "title": "Action English",
-      "classes": [
-        {
-          "coach": "Coach Clive",
-          "day": 2,
-          "time": "0300"
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 3,
-          "time": "0300"
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 6,
-          "time": "0700"
-        }
-      ]
-    },
-    {
-      "title": "AMA",
-      "classes": [
-        {
-          "coach": "Coach Francis",
-          "day": 7,
-          "time": "0600",
-          "only": [10, 24]
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 7,
-          "time": "0700",
-          "only": [3, 17]
-        },
-        {
-          "coach": "Coach Richard",
-          "day": 1,
-          "time": "0600",
-          "only": [11, 25]
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 1,
-          "time": "1600"
-        },
-        {
-          "coach": "Coach Vinnie",
-          "day": 4,
-          "time": "0500"
-        },
-        {
-          "coach": "Coach Shane",
-          "day": 5,
-          "time": "1700",
-          "only": [15]
-        },
-        {
-          "coach": "Coach Clive",
-          "day": 6,
-          "time": "0600",
-          "only": [9, 23]
-        },
-        {
-          "coach": "Coach Francis",
-          "day": 6,
-          "time": "0700",
-          "only": [16, 30]
-        },
-        {
-          "coach": "Coach Lan",
-          "day": 6,
-          "time": "1900",
-          "only": [9, 23]
-        }
-      ]
-    }
-  ]
-  
+  {
+    "title": "DDM",
+    "noDays": [1, 2, 3, 4, 5],
+    "classes": [
+      {
+        "coach": "Coach Francis",
+        "day": 7,
+        "time": "0200"
+      },
+      {
+        "coach": "Coach Lan",
+        "day": 7,
+        "time": "0230"
+      },
+      {
+        "coach": "Coach Matt",
+        "day": 7,
+        "time": "0330"
+      },
+      {
+        "coach": "Coach Milos",
+        "day": 7,
+        "time": "1200"
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 7,
+        "time": "1700"
+      },
+      {
+        "coach": "Coach Lan",
+        "day": 1,
+        "time": "0230",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Gulya",
+        "day": 1,
+        "time": "0245",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 1,
+        "time": "0500",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Miguel",
+        "day": 1,
+        "time": "0700",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 1,
+        "time": "1700",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 2,
+        "time": "0300"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 2,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 3,
+        "time": "0400"
+      },
+      {
+        "coach": "Coach Matt",
+        "day": 3,
+        "time": "0600"
+      },
+      {
+        "coach": "Coach Francis",
+        "day": 3,
+        "time": "1500"
+      },
+      {
+        "coach": "Coach Milos",
+        "day": 4,
+        "time": "1200"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 5,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Miguel",
+        "day": 5,
+        "time": "0800"
+      },
+      {
+        "coach": "Coach Francis",
+        "day": 6,
+        "time": "0230"
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 6,
+        "time": "1000"
+      },
+      {
+        "coach": "Coach Matt",
+        "day": 6,
+        "time": "1030"
+      }
+    ]
+  },
+  {
+    "title": "PIRF",
+    "noDays": [1, 2, 3, 4, 5],
+    "classes": [
+      {
+        "coach": "Coach Francis",
+        "day": 7,
+        "time": "0500"
+      },
+      {
+        "coach": "Coach Matt",
+        "day": 7,
+        "time": "0900"
+      },
+      {
+        "coach": "Coach Lan",
+        "day": 7,
+        "time": "1900"
+      },
+      {
+        "coach": "Coach Gulya",
+        "day": 1,
+        "time": "0200",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 1,
+        "time": "1600",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Francis",
+        "day": 1,
+        "time": "0600",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Paul",
+        "day": 2,
+        "time": "0200"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 2,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Matt",
+        "day": 2,
+        "time": "0600"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 3,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Paul",
+        "day": 4,
+        "time": "0200"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 4,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Miguel",
+        "day": 4,
+        "time": "0700"
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 5,
+        "time": "0300"
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 5,
+        "time": "0500"
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 5,
+        "time": "1200"
+      },
+      {
+        "coach": "Coach Lan",
+        "day": 6,
+        "time": "0230"
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 6,
+        "time": "0800"
+      }
+    ]
+  },
+  {
+    "title": "Elite Sessions",
+    "classes": [
+      {
+        "coach": "Coach Gulya",
+        "day": 2,
+        "time": "0500",
+        "only": [5, 12]
+      },
+      {
+        "coach": "Coach Shane",
+        "day": 5,
+        "time": "0930",
+        "only": [8, 22]
+      },
+      {
+        "coach": "Coach Shane",
+        "day": 5,
+        "time": "1700",
+        "only": [8, 22]
+      }
+    ]
+  },
+  {
+    "title": "Action English",
+    "classes": [
+      {
+        "coach": "Coach Clive",
+        "day": 2,
+        "time": "0300"
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 6,
+        "time": "0300"
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 6,
+        "time": "0700"
+      }
+    ]
+  },
+  {
+    "title": "AMA",
+    "classes": [
+      {
+        "coach": "Coach Francis",
+        "day": 7,
+        "time": "0600",
+        "only": [10, 24]
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 7,
+        "time": "0700",
+        "only": [3, 17]
+      },
+      {
+        "coach": "Coach Richard",
+        "day": 1,
+        "time": "0600",
+        "only": [11, 25]
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 1,
+        "time": "1600"
+      },
+      {
+        "coach": "Coach Vinnie",
+        "day": 4,
+        "time": "0500"
+      },
+      {
+        "coach": "Coach Shane",
+        "day": 5,
+        "time": "1700",
+        "only": [15]
+      },
+      {
+        "coach": "Coach Clive",
+        "day": 6,
+        "time": "0600",
+        "only": [9, 23]
+      },
+      {
+        "coach": "Coach Francis",
+        "day": 6,
+        "time": "0700",
+        "only": [16, 30]
+      },
+      {
+        "coach": "Coach Lan",
+        "day": 6,
+        "time": "1900",
+        "only": [9, 23]
+      }
+    ]
+  }
+]
