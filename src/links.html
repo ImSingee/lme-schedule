@@ -148,7 +148,11 @@
             
             return parts.map(part => {
                 if (part.match(urlRegex)) {
-                    return `<a href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+                    if (part.startsWith('https://app.box.com/')) {
+                        return ''
+                    } else {
+                        return `<a href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+                    }
                 }
                 return escapeHtml(part);
             }).join('');
