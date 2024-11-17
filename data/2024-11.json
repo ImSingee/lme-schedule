@@ -31,8 +31,7 @@
       {
         "coach": "Coach Lan",
         "day": 1,
-        "time": "0230",
-        "only": [11, 25]
+        "time": "0230"
       },
       {
         "coach": "Coach Gulya",
@@ -43,20 +42,17 @@
       {
         "coach": "Coach Vinnie",
         "day": 1,
-        "time": "0500",
-        "only": [11, 25]
+        "time": "0400"
       },
       {
         "coach": "Coach Miguel",
         "day": 1,
-        "time": "0700",
-        "only": [11, 25]
+        "time": "0700"
       },
       {
         "coach": "Coach Vinnie",
         "day": 1,
-        "time": "1700",
-        "only": [11, 25]
+        "time": "1700"
       },
       {
         "coach": "Coach Vinnie",
@@ -67,11 +63,6 @@
         "coach": "Coach Richard",
         "day": 2,
         "time": "1600"
-      },
-      {
-        "coach": "Coach Richard",
-        "day": 3,
-        "time": "0400"
       },
       {
         "coach": "Coach Matt",
@@ -90,7 +81,7 @@
       },
       {
         "coach": "Coach Richard",
-        "day": 5,
+        "day": 4,
         "time": "1600"
       },
       {
@@ -101,7 +92,7 @@
       {
         "coach": "Coach Francis",
         "day": 6,
-        "time": "0230"
+        "time": "0130"
       },
       {
         "coach": "Coach Clive",
@@ -143,14 +134,12 @@
       {
         "coach": "Coach Richard",
         "day": 1,
-        "time": "1600",
-        "only": [11, 25]
+        "time": "1600"
       },
       {
         "coach": "Coach Francis",
         "day": 1,
-        "time": "0600",
-        "only": [11, 25]
+        "time": "0600"
       },
       {
         "coach": "Coach Paul",
@@ -190,7 +179,7 @@
       {
         "coach": "Coach Vinnie",
         "day": 5,
-        "time": "0300"
+        "time": "0200"
       },
       {
         "coach": "Coach Clive",
@@ -286,7 +275,7 @@
       {
         "coach": "Coach Vinnie",
         "day": 4,
-        "time": "0500"
+        "time": "0400"
       },
       {
         "coach": "Coach Shane",
