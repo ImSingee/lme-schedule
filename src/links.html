@@ -174,12 +174,21 @@
                 `Last updated: <span class="refresh-time">${timeAgo}</span>`;
         }
 
+        function formatTime(time) {
+            try {
+                const date = new Date(time)
+                return date.toLocaleString()
+            } catch (error) {
+                return time
+            }
+        }
+
         // Render message list
         function renderMessages(messages) {
             const messagesContainer = document.getElementById('messages');
             messagesContainer.innerHTML = messages.map(message => `
                 <div class="message-item">
-                    <div class="message-time">${message.time}</div>
+                    <div class="message-time">${formatTime(message.time)}</div>
                     <div class="message-text">${convertLinksToHtml(message.text)}</div>
                 </div>
             `).join('');
