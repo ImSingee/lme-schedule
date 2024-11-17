@@ -235,12 +235,52 @@
             .title-container h1 {
                 margin: 0;
             }
+
+            #disclaimer {
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #fff3cd;
+                border: 1px solid #ffeeba;
+                border-radius: 8px;
+                color: #856404;
+            }
+
+            .warning-banner {
+                margin-bottom: 12px;
+            }
+
+            .warning-banner strong {
+                color: #664d03;
+            }
+
+            .contact-info {
+                font-size: 0.9em;
+                padding-top: 10px;
+            }
+
+            .contact-info a {
+                color: #664d03;
+                text-decoration: underline;
+            }
+
+            .contact-info a:hover {
+                color: #523d02;
+            }
         </style>
     </head>
     <body>
         <div class="title-container">
             <h1>LME Live Course Schedule</h1>
             <div id="loading" class="loading"></div>
+        </div>
+
+        <div id="disclaimer">
+            <div class="warning-banner">
+                This is an unofficial display website and the schedule information is for reference only. Since the schedule data was last updated on <span id="lastUpdateDate">(unknown date)</span>, actual course arrangements may have changed. Please refer to the latest announcements from your instructors.
+            </div>
+            <div class="contact-info">
+                This website is maintained by <a href="mailto:lme-schedule@singee.me">Bryan</a>. Please contact me if you have any questions.
+            </div>
         </div>
         
         <div class="input-group">
@@ -312,6 +352,11 @@
                 <div class="calendar-header">Sat</div>
             </div>
         </div>
+
+        <script>
+            const lastUpdateDate = new Date('2024-11-01')
+            document.getElementById('lastUpdateDate').textContent = new Date().toLocaleString()
+        </script>
 
         <script>
             let currentDate = new Date();
