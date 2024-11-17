@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LME Live Class Links</title>
+    <style>
+        .warning-container {
+            margin-bottom: 20px;
+        }
+        .warning-banner {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .warning-banner:last-child {
+            margin-bottom: 0;
+        }
+        .warning-banner strong {
+            color: #664d03;
+        }
+        .message-list {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .message-item {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .message-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .message-text {
+            margin-top: 5px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .message-text a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .message-text a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            display: none;
+        }
+        .loading.active {
+            display: block;
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            display: none;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error.active {
+            display: block;
+        }
+        .refresh-container {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.8em;
+        }
+        .refresh-info {
+            text-align: center;
+            color: #666;
+        }
+        .refresh-time {
+            font-weight: bold;
+        }
+        #refresh-button {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-list">
+        <h1>LME Live Class Links</h1>
+        <div class="warning-container">
+            <div class="warning-banner">
+                <strong>⚠️ Disclaimer:</strong> This is an unofficial display website and may not correctly identify/display all notifications. 
+                If you cannot find the course link at the scheduled start time, please check Box directly.
+            </div>
+            <div class="warning-banner">
+                <strong>⚠️ Important Note:</strong> Some instructors only modify the Live Class Note file without making comments. 
+                Course links from these instructors will not be displayed here.
+            </div>
+        </div>
+        <div class="refresh-container">
+            <div id="refresh-info" class="refresh-info"></div>
+            <a id="refresh-button">Refresh Now</a>
+        </div>
+        <div id="loading" class="loading">Loading...</div>
+        <div id="error" class="error"></div>
+        <div id="messages"></div>
+       
+    </div>
+
+    <script>
+        // Global variables
+        let lastRefreshTime = new Date();
+        let isLoading = false;
+        let refreshTimer = null;
+        const REFRESH_INTERVAL = 30 * 1000; // 30 seconds
+
+        async function fetchMessages() {
+            const response = await fetch('/links.json')
+            if (!response.ok) {
+                throw new Error('Failed to fetch messages')
+            }
+
+            return await response.json()
+        }
+
+        // Convert URLs to clickable links
+        function convertLinksToHtml(text) {
+            const urlRegex = /(https?:\/\/[^\s"]+)/g;
+            
+            const escapeHtml = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+
+            const parts = text.split(urlRegex);
+            
+            return parts.map(part => {
+                if (part.match(urlRegex)) {
+                    return `<a href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+                }
+                return escapeHtml(part);
+            }).join('');
+        }
+
+        // Update refresh time display
+        function updateRefreshInfo() {
+            const seconds = Math.floor((new Date() - lastRefreshTime) / 1000);
+            let timeAgo;
+            if (seconds < 60) {
+                timeAgo = `${seconds} seconds ago`;
+            } else if (seconds < 3600) {
+                timeAgo = `${Math.floor(seconds / 60)} minutes ago`;
+            } else {
+                timeAgo = `${Math.floor(seconds / 3600)} hours ago`;
+            }
+            
+            document.getElementById('refresh-info').innerHTML = 
+                `Last updated: <span class="refresh-time">${timeAgo}</span>`;
+        }
+
+        // Render message list
+        function renderMessages(messages) {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = messages.map(message => `
+                <div class="message-item">
+                    <div class="message-time">${message.time}</div>
+                    <div class="message-text">${convertLinksToHtml(message.text)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Set loading state
+        function setLoading(loading) {
+            isLoading = loading;
+            document.getElementById('loading').classList.toggle('active', loading);
+            document.getElementById('refresh-button').disabled = loading;
+        }
+
+        // Set error state
+        function setError(error) {
+            const errorElement = document.getElementById('error');
+            if (error) {
+                errorElement.textContent = `Error: ${error}`;
+                errorElement.classList.add('active');
+            } else {
+                errorElement.classList.remove('active');
+            }
+        }
+
+        // Refresh data
+        async function refreshData() {
+            if (isLoading) return;
+
+            setLoading(true);
+            setError(null);
+
+            try {
+                const data = await fetchMessages();
+                renderMessages(data);
+                lastRefreshTime = new Date();
+                updateRefreshInfo();
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Initialize
+        function initialize() {
+            // Set auto refresh
+            refreshTimer = setInterval(refreshData, REFRESH_INTERVAL);
+
+            // Set focus refresh
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    refreshData();
+                }
+            });
+
+            // Update refresh time display
+            setInterval(updateRefreshInfo, 1000);
+
+            // Set manual refresh button
+            document.getElementById('refresh-button').addEventListener('click', refreshData);
+
+            // Initial load
+            refreshData();
+        }
+
+        // Start application
+        initialize();
+    </script>
+</body>
+</html>
