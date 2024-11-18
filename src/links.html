@@ -189,7 +189,7 @@
             messagesContainer.innerHTML = messages.map(message => `
                 <div class="message-item">
                     <div class="message-time">${formatTime(message.time)}</div>
-                    <div class="message-text">${convertLinksToHtml(message.text)}</div>
+                    <div class="message-text">${convertLinksToHtml(message.digest || message.text)}</div>
                 </div>
             `).join('');
         }
