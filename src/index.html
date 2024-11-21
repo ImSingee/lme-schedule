@@ -266,6 +266,20 @@
             .contact-info a:hover {
                 color: #523d02;
             }
+
+            .day-number {
+                width: 24px;
+                height: 24px;
+                text-align: center;
+                line-height: 24px;
+            }
+
+            .today .day-number {
+                display: inline-block;
+                background-color: #ff4444;
+                color: white;
+                border-radius: 50%;
+            }
         </style>
     </head>
     <body>
@@ -471,6 +485,8 @@
             
             // Create separate calendar function from existing calendar logic
             function createCalendar(calendarId, events, selectedCourses, timezone, parent) {
+                const today = new Date();
+
                 // Check and delete existing calendar element with the same name
                 const calendar = document.createElement('div');
                 calendar.id = calendarId;
@@ -504,7 +520,15 @@
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDiv = document.createElement('div');
                     dayDiv.className = 'calendar-day';
-                    dayDiv.innerHTML = `<div>${day}</div>`;
+                    
+                    // Check if it's today
+                    if (day === today.getDate() && 
+                        currentDate.getMonth() === today.getMonth() && 
+                        currentDate.getFullYear() === today.getFullYear()) {
+                        dayDiv.classList.add('today');
+                    }
+                    
+                    dayDiv.innerHTML = `<div class="day-number">${day}</div>`;
                     
                     // Find events for the current day
                     const currentDayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
