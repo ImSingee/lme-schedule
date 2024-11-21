@@ -182,7 +182,7 @@ async function main() {
     try {
         const jsonData = await readJsonInput(filename);
         const events = generateEvents(jsonData, year, month);
-        console.log(JSON.stringify(events));
+        console.log(JSON.stringify(events, null, 2));
     } catch (error) {
         console.error('Error:', error.message);
         Deno.exit(1);

@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
-    "generate": "bash scripts/generate.sh"
+    "generate": "bash scripts/generate.sh",
+    "merge": "deno run --allow-read --allow-write scripts/merge-events.ts"
   },
   "dependencies": {
     "date-fns": "^3.6.0",
