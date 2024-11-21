@@ -1,2 +1,5 @@
 name = "lme-schedule"
 compatibility_date = "2024-08-02"
+
+[observability.logs]
+enabled = true

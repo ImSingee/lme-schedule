@@ -14,7 +14,7 @@
     "ics": "^3.7.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240725.0",
-    "wrangler": "^3.68.0"
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "wrangler": "^3.88.0"
   }
 }
