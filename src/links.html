@@ -126,12 +126,13 @@
         const REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 
         async function fetchMessages() {
-            const response = await fetch('/links.json')
+            const response = await fetch('/api/links')
             if (!response.ok) {
                 throw new Error('Failed to fetch messages')
             }
 
-            return await response.json()
+            const data = await response.json()
+            return data.messages // 从响应中获取 messages 数组
         }
 
         // Convert URLs to clickable links

@@ -9,6 +9,7 @@ import linksHtml from './links.html'
 import {generateICS} from './ics';
 import { getEvents } from './events';
 import { applyFilter } from './filter';
+import { getBoxMessages, handleLinksAPI } from './links';
 
 const cacheKey = '2024-11-17T12:08:45.693Z'
 
@@ -30,22 +31,15 @@ app.notFound(() => {
 app.get('/', (c) => c.html(indexHtml))
 app.get('/links', (c) => c.html(linksHtml))
 
+app.get('/api/links', cache({
+    cacheName: 'links.json',
+    cacheControl: 'public, max-age=10', // 10s
+  }), async (c) => c.json(await handleLinksAPI()))
+
 app.get('/links.json', cache({
     cacheName: 'links.json',
     cacheControl: 'public, max-age=10', // 10s
-  }), async (c) => {
-    const response = await fetch('https://jsonbin.singee.workers.dev/lme-box', {
-        headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2N1bnp1ZXdodjl1cGhlZmVvMWFwYXFvIiwiaWF0IjoxNzMxODQzNTcwLCJhIjp7ImxtZS1ib3giOiJyIn19.GVs4VE-tZFjYoyWDmMfiuD4AhaTq9C22mHgss-NlMY4'
-        }
-    })
-
-    const result = await response.json<unknown[]>();
-
-    const messages = result.reverse().slice(0, 50)
-    
-    return c.json(messages)
-})
+  }), async (c) => c.json(await getBoxMessages()))
 
 function getFilteredEvents(url: string) {
     const filter = new URL(url).search
