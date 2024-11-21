@@ -114,12 +114,8 @@
         <h1>LME Live Class Links</h1>
         <div class="warning-container">
             <div class="warning-banner">
-                <strong>⚠️ Disclaimer:</strong> This is an unofficial display website and may not correctly identify/display all notifications. 
+                <strong>⚠️ Disclaimer:</strong> This is an unofficial display website and may not correctly display all live class links. 
                 If you cannot find the course link at the scheduled start time, please check Box directly.
-            </div>
-            <div class="warning-banner">
-                <strong>⚠️ Important Note:</strong> Some instructors only modify the Live Class Note file without making comments. 
-                Course links from these instructors will not be displayed here.
             </div>
         </div>
         <div class="refresh-container">
@@ -129,7 +125,7 @@
         <div id="loading" class="loading">Loading...</div>
         <div id="error" class="error"></div>
         <div id="realtime-message" class="message-item realtime-message" style="display: none;">
-            <div class="message-time">实时消息 - 最后更新: <span id="realtime-update-time"></span></div>
+            <div class="message-time">LIVE CLASS LINKS (last updated: <span id="realtime-update-time"></span>)</div>
             <div class="message-text"></div>
         </div>
         <div id="messages"></div>
@@ -217,7 +213,7 @@
             const realtimeContainer = document.getElementById('realtime-message');
             if (realtime && realtime.note) {
                 document.getElementById('realtime-update-time').textContent = formatTime(realtime.updatedAt);
-                realtimeContainer.querySelector('.message-text').innerHTML = convertLinksToHtml(realtime.note);
+                realtimeContainer.querySelector('.message-text').innerHTML = convertLinksToHtml(realtime.note || '(No active class link now)' );
                 realtimeContainer.style.display = 'block';
             } else {
                 realtimeContainer.style.display = 'none';
