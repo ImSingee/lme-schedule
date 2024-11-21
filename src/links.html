@@ -93,6 +93,20 @@
             cursor: pointer;
             font-weight: bold;
         }
+        .realtime-message {
+            background-color: #e3f2fd;
+            border: 1px solid #90caf9;
+            margin-bottom: 20px;
+        }
+        .realtime-message .message-time {
+            color: #999;
+            font-size: 0.9em;
+        }
+        .realtime-message .message-text {
+            margin-top: 5px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body>
@@ -114,8 +128,11 @@
         </div>
         <div id="loading" class="loading">Loading...</div>
         <div id="error" class="error"></div>
+        <div id="realtime-message" class="message-item realtime-message" style="display: none;">
+            <div class="message-time">实时消息 - 最后更新: <span id="realtime-update-time"></span></div>
+            <div class="message-text"></div>
+        </div>
         <div id="messages"></div>
-       
     </div>
 
     <script>
@@ -132,7 +149,7 @@
             }
 
             const data = await response.json()
-            return data.messages // 从响应中获取 messages 数组
+            return data // 返回完整响应数据
         }
 
         // Convert URLs to clickable links
@@ -195,6 +212,18 @@
             `).join('');
         }
 
+        // 渲染实时消息
+        function renderRealtimeMessage(realtime) {
+            const realtimeContainer = document.getElementById('realtime-message');
+            if (realtime && realtime.note) {
+                document.getElementById('realtime-update-time').textContent = formatTime(realtime.updatedAt);
+                realtimeContainer.querySelector('.message-text').innerHTML = convertLinksToHtml(realtime.note);
+                realtimeContainer.style.display = 'block';
+            } else {
+                realtimeContainer.style.display = 'none';
+            }
+        }
+
         // Set loading state
         function setLoading(loading) {
             isLoading = loading;
@@ -222,7 +251,8 @@
 
             try {
                 const data = await fetchMessages();
-                renderMessages(data);
+                renderRealtimeMessage(data.realtime);
+                renderMessages(data.messages);
                 lastRefreshTime = new Date();
                 updateRefreshInfo();
             } catch (error) {
