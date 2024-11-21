@@ -1,6 +1,7 @@
 import {Hono} from 'hono'
 import {HTTPException} from 'hono/http-exception';
 import {errorToResponse, HTTP404} from './error';
+import { cache } from 'hono/cache'
 
 import indexHtml from './index.html'
 import linksHtml from './links.html'
@@ -8,6 +9,8 @@ import linksHtml from './links.html'
 import {generateICS} from './ics';
 import { getEvents } from './events';
 import { applyFilter } from './filter';
+
+const cacheKey = '2024-11-17T12:08:45.693Z'
 
 
 
@@ -44,12 +47,20 @@ app.get('/links.json', async (c) => {
 function getFilteredEvents(url: string) {
     const filter = new URL(url).search
 
+    console.log('getFilteredEvents', url)
+
     return applyFilter(getEvents(), filter)
 }
 
-app.get('/events', (c) => c.json(getFilteredEvents(c.req.url)))
+app.get('/events', cache({
+    cacheName: 'events>' + cacheKey,
+    cacheControl: 'public, max-age=86400', // 24 hours
+  }), (c) => c.json(getFilteredEvents(c.req.url)))
 
-app.get('/ics', async (c) => {
+app.get('/ics',cache({
+    cacheName: 'ics>' + cacheKey,
+    cacheControl: 'public, max-age=86400', // 24 hours
+  }), async (c) => {
     const icsString = await generateICS(getFilteredEvents(c.req.url));
 
     return c.text(icsString)
