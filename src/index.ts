@@ -30,7 +30,10 @@ app.notFound(() => {
 app.get('/', (c) => c.html(indexHtml))
 app.get('/links', (c) => c.html(linksHtml))
 
-app.get('/links.json', async (c) => {
+app.get('/links.json', cache({
+    cacheName: 'links.json',
+    cacheControl: 'public, max-age=10', // 10s
+  }), async (c) => {
     const response = await fetch('https://jsonbin.singee.workers.dev/lme-box', {
         headers: {
             'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwM2N1bnp1ZXdodjl1cGhlZmVvMWFwYXFvIiwiaWF0IjoxNzMxODQzNTcwLCJhIjp7ImxtZS1ib3giOiJyIn19.GVs4VE-tZFjYoyWDmMfiuD4AhaTq9C22mHgss-NlMY4'
