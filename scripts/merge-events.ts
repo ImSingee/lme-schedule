@@ -1,6 +1,6 @@
 import {readFile, writeFile} from 'node:fs/promises'
 
-const dates = ['2024-08', '2024-09', '2024-10', '2024-11']
+const dates = ['2024-08', '2024-09', '2024-10', '2024-11', '2024-12']
 
 const allEvents = []
 
